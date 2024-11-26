@@ -1,8 +1,8 @@
 import socket
 import threading
 
-PORT = 5000
 SERVER = socket.gethostbyname(socket.gethostname())
+PORT = 5000
 ADDR = (SERVER, PORT)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -10,23 +10,16 @@ server.bind(ADDR)
 
 HEADER = 8
 FORMAT = 'utf-8'
+MAX_SIZE = 1024
 
 print("Server staring on port ", PORT)
 
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected.")
 
-    connected = True
-    while connected:
-        msgSize = conn.recv(HEADER).decode(FORMAT)
-        if (msgSize): 
-            msgSize = int(msgSize)
-            msg = conn.recv(msgSize).decode(FORMAT)
-
-            if msg == "#":
-                break
-
-            print(f"[{addr}] {msg}")
+    msg = conn.recv(MAX_SIZE).decode(FORMAT)
+    print(msg)
+    conn.send("hi".encode(FORMAT))
     
     conn.close()
 
